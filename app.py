@@ -59,6 +59,8 @@ from flask import Flask, jsonify, render_template_string, request
 
 app = Flask(__name__)
 
+# Commit 3: Mostrar todos los dispositivos
+
 dispositivos = {
     "router01": {
         "id": "router01",
@@ -84,7 +86,7 @@ dispositivos = {
         "id": "ap01",
         "nombre": "Access Point Principal",
         "descripcion": "Punto de acceso WiFi principal",
-        "ip": "192.168.1.30",
+        "ip": "192.168.1.20",
         "mac": "FF:EE:DD:CC:BB:AA",
         "ubicacion": "Recepción",
         "tipo": "Access Point",
@@ -92,10 +94,55 @@ dispositivos = {
     }
 }
 
+@app.route('/dispositivos_html', methods=['GET'])
+def mostrar_dispositivos_html():
+    html = """
+    <html>
+    <head>
+        <title>Dispositivos de Red</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 20px;
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+            .dispositivo {
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin: 10px auto;
+                border-radius: 10px;
+                background-color: #fff;
+                width: 60%;
+                box-shadow: 0px 0px 5px #aaa;
+            }
+            .dispositivo h2 {
+                color: #0066cc;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Lista de Dispositivos</h1>
+        {% for d in dispositivos.values() %}
+            <div class="dispositivo">
+                <h2>{{ d['nombre'] }}</h2>
+                <p><b>ID:</b> {{ d['id'] }}</p>
+                <p><b>Descripción:</b> {{ d['descripcion'] }}</p>
+                <p><b>IP:</b> {{ d['ip'] }}</p>
+                <p><b>MAC:</b> {{ d['mac'] }}</p>
+                <p><b>Ubicación:</b> {{ d['ubicacion'] }}</p>
+                <p><b>Tipo:</b> {{ d['tipo'] }}</p>
+                <p><b>Otros:</b> {{ d['otros'] }}</p>
+            </div>
+        {% endfor %}
+    </body>
+    </html>
+    """
+    return render_template_string(html, dispositivos=dispositivos)
 
-@app.route('/', methods=['GET'])
-def test():
-    return "Hola mundo"
 
 if __name__ == '__main__':
     app.run(debug=True)
