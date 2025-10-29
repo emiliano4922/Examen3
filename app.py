@@ -84,13 +84,14 @@ dispositivos = {
         "id": "ap01",
         "nombre": "Access Point Principal",
         "descripcion": "Punto de acceso WiFi principal",
-        "ip": "192.168.1.20",
+        "ip": "192.168.1.30",
         "mac": "FF:EE:DD:CC:BB:AA",
         "ubicacion": "Recepción",
         "tipo": "Access Point",
         "otros": ""
     }
 }
+
 
 @app.route('/', methods=['GET'])
 def test():
