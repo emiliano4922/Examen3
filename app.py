@@ -165,5 +165,25 @@ def agregar_dispositivo():
     dispositivos[id] = data
     return jsonify({"mensaje": "Dispositivo agregado correctamente"}), 201
 
+@app.route('/dispositivos/<id>', methods=['PUT'])
+def modificar_dispositivo(id):
+    if id not in dispositivos:
+        return jsonify({"error": "Dispositivo no encontrado"}), 404
+
+    data = request.get_json()
+
+    for campo, valor in data.items():
+        dispositivos[id][campo] = valor
+
+    try:
+        ultimo_octeto = int(dispositivos[id]['ip'].split('.')[-1])
+    except:
+        return jsonify({"error": "La IP no es válida"}), 400
+
+    formula = ultimo_octeto * 3 + len(dispositivos[id]['nombre'])
+    dispositivos[id]['otros'] = f"{formula}:{dispositivos[id]['nombre'].replace(' ', '_')}"
+
+    return jsonify({"mensaje": "Dispositivo modificado correctamente"}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
