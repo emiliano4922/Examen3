@@ -143,6 +143,27 @@ def mostrar_dispositivos_html():
     """
     return render_template_string(html, dispositivos=dispositivos)
 
+@app.route('/dispositivos', methods=['POST'])
+def agregar_dispositivo():
+    data = request.get_json()
+    id = data.get('id')
+
+    if not id:
+        return jsonify({"error": "Debe incluir un 'id'"}), 400
+    if id in dispositivos:
+        return jsonify({"error": "El dispositivo ya existe"}), 400
+
+    try:
+        ultimo_octeto = int(data['ip'].split('.')[-1])
+    except:
+        return jsonify({"error": "La IP no es válida"}), 400
+
+    formula = ultimo_octeto * 3 + len(data['nombre'])
+    otros = f"{formula}:{data['nombre'].replace(' ', '_')}"
+    data['otros'] = otros
+
+    dispositivos[id] = data
+    return jsonify({"mensaje": "Dispositivo agregado correctamente"}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
